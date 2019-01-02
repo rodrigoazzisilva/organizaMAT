@@ -1,0 +1,78 @@
+Sub Planilhao()
+
+'Macro desenvolvida por Rodrigo Azzi Silva
+'Instituto de Geociências/USP
+'Centro de Pesquisas Geocronológicas - CPGeo
+'29 de fevereiro de 2016
+
+
+Sheets("planilhao").Select
+
+Dim n, l, c, cell, lbr As Integer
+
+n = 7 'contador de amostras
+cell = 0 'valor da célula que contém o bloco desejado
+l = 9 'linha da planilha planilhao
+c = 2 'coluna da planilha planilhao
+lbr = 9 'linha do branco
+
+
+While ActiveWorkbook.Sheets("intermediária").Cells(n, 1) <> 0
+
+cell = ActiveWorkbook.Sheets("intermediária").Cells(n, 2) 'verifica a quantidade de blocos desejada
+
+
+If cell > 0 Then
+
+
+If ActiveWorkbook.Sheets("intermediária").Cells(9 * cell, 6 * (n - 6) - 1).Value = 0 Then 'verifica se o resultado é um branco
+
+ActiveSheet.Cells(lbr, 41) = ActiveWorkbook.Sheets("intermediária").Cells(n, 1).Value 'nome do branco
+ActiveSheet.Cells(lbr, 42) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 3, 6 * (n - 6) - 1).Value 'valor do branco
+lbr = lbr + 1
+
+Else
+
+ActiveSheet.Cells(l, c - 1) = ActiveWorkbook.Sheets("intermediária").Cells(n, 1).Value 'nome da amostra
+
+ActiveSheet.Cells(l, c) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 5, 6 * (n - 6) - 1).Value 'razão 206/204
+ActiveSheet.Cells(l, c + 1) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 5, 6 * (n - 6)).Value '1SD
+ActiveSheet.Cells(l, c + 2) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 5, 6 * (n - 6) + 1).Value '2SE(M)
+ActiveSheet.Cells(l, c + 3) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 5, 6 * (n - 6) + 2).Value 'value
+
+ActiveSheet.Cells(l, c + 4) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 4, 6 * (n - 6) - 1).Value 'razão 207/204
+ActiveSheet.Cells(l, c + 5) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 4, 6 * (n - 6)).Value '1SD
+ActiveSheet.Cells(l, c + 6) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 4, 6 * (n - 6) + 1).Value '2SE(M)
+ActiveSheet.Cells(l, c + 7) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 4, 6 * (n - 6) + 2).Value 'value
+
+ActiveSheet.Cells(l, c + 8) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 3, 6 * (n - 6) - 1).Value 'razão 208/204
+ActiveSheet.Cells(l, c + 9) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 3, 6 * (n - 6)).Value '1SD
+ActiveSheet.Cells(l, c + 10) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 3, 6 * (n - 6) + 1).Value '2SE(M)
+ActiveSheet.Cells(l, c + 11) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 3, 6 * (n - 6) + 2).Value 'value
+
+ActiveSheet.Cells(l, c + 12) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 2, 6 * (n - 6) - 1).Value 'razão 204/206
+ActiveSheet.Cells(l, c + 13) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 2, 6 * (n - 6)).Value '1SD
+ActiveSheet.Cells(l, c + 14) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 2, 6 * (n - 6) + 1).Value '2SE(M)
+ActiveSheet.Cells(l, c + 15) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 2, 6 * (n - 6) + 2).Value 'value
+
+ActiveSheet.Cells(l, c + 16) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 1, 6 * (n - 6) - 1).Value 'razão 207/206
+ActiveSheet.Cells(l, c + 17) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 1, 6 * (n - 6)).Value '1SD
+ActiveSheet.Cells(l, c + 18) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 1, 6 * (n - 6) + 1).Value '2SE(M)
+ActiveSheet.Cells(l, c + 19) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell - 1, 6 * (n - 6) + 2).Value 'value
+
+ActiveSheet.Cells(l, c + 20) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell, 6 * (n - 6) - 1).Value 'razão 208/206
+ActiveSheet.Cells(l, c + 21) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell, 6 * (n - 6)).Value '1SD
+ActiveSheet.Cells(l, c + 22) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell, 6 * (n - 6) + 1).Value '2SE(M)
+ActiveSheet.Cells(l, c + 23) = ActiveWorkbook.Sheets("intermediária").Cells(9 * cell, 6 * (n - 6) + 2).Value 'value
+
+l = l + 1 'pula uma linha quando um resultado for escrito
+
+End If
+
+End If
+
+n = n + 1 'continua contando
+
+Wend
+
+End Sub
