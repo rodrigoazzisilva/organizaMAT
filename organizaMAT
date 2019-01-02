@@ -1,0 +1,123 @@
+Sub organizaMAT()
+
+'Macro desenvolvida por Rodrigo Azzi Silva
+'Instituto de Geociências/USP
+'Centro de Pesquisas Geocronológicas - CPGeo
+'5 de fevereiro de 2016
+
+
+    Dim a, j, n, nome, bloco, max, controle, r As Integer
+    Dim nomeAtual As String
+    
+    a = 1 'variável a representa a linha da planilha destino
+    j = -2 'variável j representa a coluna da planilha destino
+    n = 1 'variável n é um contador
+    max = 30000 'linha final que a macro termina de ler
+    controle = 7 'contador para colocar o nome das amostras na primeira coluna
+    r = 0 'verifica se a frase "Release..." aparece (correção de bug)
+    
+    Sheets("intermediária").Select
+    
+    While n < max
+    
+    'seguinte trecho serve para encontrar onde estão os resultados
+    While StrComp(Left(ActiveWorkbook.Sheets("MAT").Cells(n, 1).Value, 18), "RUN SUMMARY OF IND", vbBinaryCompare) <> 0
+
+        n = n + 1
+        'o trecho abaixo serve para o programa rodar mais uma última vez no final
+        If n = max Then
+            ActiveWorkbook.Sheets("MAT").Cells(n, 1) = "RUN SUMMARY OF IND"
+        End If
+                
+    Wend
+    
+    'o trecho abaixo procura o nome da amostra e escreve na próxima coluna quando necessário
+    nome = n
+    While StrComp(Left(ActiveWorkbook.Sheets("MAT").Cells(nome, 1).Value, 5), "DATE:", vbBinaryCompare) <> 0
+        nome = nome - 1
+    Wend
+    
+    'o trecho abaixo verifica se mudou a amostra e começa a colocar os resultados no local da próxima amostra
+    If StrComp(ActiveWorkbook.Sheets("MAT").Cells(nome, 1).Value, nomeAtual, vbBinaryCompare) <> 0 Then
+        j = j + 6 'começa a escrever 8 colunas depois para ter espaço para as outras razões
+        a = 1 'retorna para a primeira linha
+        ActiveSheet.Cells(a, j) = ActiveWorkbook.Sheets("MAT").Cells(nome + 1, 1).Value 'coloca o nome da amostra
+        ActiveSheet.Cells(controle, 1) = Mid$(ActiveWorkbook.Sheets("MAT").Cells(nome + 1, 1).Value, 18) 'coloca o nome da amostra na primeira coluna
+        nomeAtual = ActiveWorkbook.Sheets("MAT").Cells(nome, 1).Value
+        a = a + 1
+        controle = controle + 1
+    End If
+    
+    'o trecho abaixo procura o nome do bloco e escreve
+    bloco = n
+    While StrComp(Left(ActiveWorkbook.Sheets("MAT").Cells(bloco, 1).Value, 5), "** Bl", vbBinaryCompare) <> 0 'verifica o bloco
+        bloco = bloco - 1
+    Wend
+        
+    ActiveSheet.Cells(a, j) = ActiveWorkbook.Sheets("MAT").Cells(bloco, 1).Value 'coloca o bloco antes dos resultados
+    a = a + 1
+    
+    If StrComp(Left(ActiveWorkbook.Sheets("MAT").Cells(n + 1, 1).Value, 7), "Release", vbBinaryCompare) = 0 Then 'correção da frase "Release..."
+        r = 1
+        Else: r = 0
+    End If
+    
+    If StrComp(Left(ActiveWorkbook.Sheets("MAT").Cells(n + 2, 1).Value, 7), "Release", vbBinaryCompare) = 0 Then 'correção da frase "Release..."
+        r = 1
+        Else: r = 0
+    End If
+    
+    n = n + r 'r pula a linha release quando necessário
+        
+    'o trecho abaixo coloca os resultados do bloco
+    'primeira coluna (razões):
+    ActiveSheet.Cells(a, j) = "Ratio"
+    ActiveSheet.Cells(a + 1, j) = ActiveWorkbook.Sheets("MAT").Cells(n + 3, 1)
+    ActiveSheet.Cells(a + 2, j) = ActiveWorkbook.Sheets("MAT").Cells(n + 4, 1)
+    ActiveSheet.Cells(a + 3, j) = ActiveWorkbook.Sheets("MAT").Cells(n + 5, 1)
+    ActiveSheet.Cells(a + 4, j) = ActiveWorkbook.Sheets("MAT").Cells(n + 6, 1)
+    ActiveSheet.Cells(a + 5, j) = ActiveWorkbook.Sheets("MAT").Cells(n + 7, 1)
+    ActiveSheet.Cells(a + 6, j) = ActiveWorkbook.Sheets("MAT").Cells(n + 8, 1)
+    'segunda coluna (valores das razões):
+    ActiveSheet.Cells(a, j + 1) = "Mean(RS)"
+    ActiveSheet.Cells(a + 1, j + 1) = ActiveWorkbook.Sheets("MAT").Cells(n + 3, 2)
+    ActiveSheet.Cells(a + 2, j + 1) = ActiveWorkbook.Sheets("MAT").Cells(n + 4, 2)
+    ActiveSheet.Cells(a + 3, j + 1) = ActiveWorkbook.Sheets("MAT").Cells(n + 5, 2)
+    ActiveSheet.Cells(a + 4, j + 1) = ActiveWorkbook.Sheets("MAT").Cells(n + 6, 2)
+    ActiveSheet.Cells(a + 5, j + 1) = ActiveWorkbook.Sheets("MAT").Cells(n + 7, 2)
+    ActiveSheet.Cells(a + 6, j + 1) = ActiveWorkbook.Sheets("MAT").Cells(n + 8, 2)
+    'terceira coluna (1SD):
+    ActiveSheet.Cells(a, j + 2) = "1SD"
+    ActiveSheet.Cells(a + 1, j + 2) = ActiveWorkbook.Sheets("MAT").Cells(n + 3, 3)
+    ActiveSheet.Cells(a + 2, j + 2) = ActiveWorkbook.Sheets("MAT").Cells(n + 4, 3)
+    ActiveSheet.Cells(a + 3, j + 2) = ActiveWorkbook.Sheets("MAT").Cells(n + 5, 3)
+    ActiveSheet.Cells(a + 4, j + 2) = ActiveWorkbook.Sheets("MAT").Cells(n + 6, 3)
+    ActiveSheet.Cells(a + 5, j + 2) = ActiveWorkbook.Sheets("MAT").Cells(n + 7, 3)
+    ActiveSheet.Cells(a + 6, j + 2) = ActiveWorkbook.Sheets("MAT").Cells(n + 8, 3)
+    'quarta coluna (2 SE (M)):
+    ActiveSheet.Cells(a, j + 3) = "2 SE(M)"
+    ActiveSheet.Cells(a + 1, j + 3) = ActiveWorkbook.Sheets("MAT").Cells(n + 3, 5)
+    ActiveSheet.Cells(a + 2, j + 3) = ActiveWorkbook.Sheets("MAT").Cells(n + 4, 5)
+    ActiveSheet.Cells(a + 3, j + 3) = ActiveWorkbook.Sheets("MAT").Cells(n + 5, 5)
+    ActiveSheet.Cells(a + 4, j + 3) = ActiveWorkbook.Sheets("MAT").Cells(n + 6, 5)
+    ActiveSheet.Cells(a + 5, j + 3) = ActiveWorkbook.Sheets("MAT").Cells(n + 7, 5)
+    ActiveSheet.Cells(a + 6, j + 3) = ActiveWorkbook.Sheets("MAT").Cells(n + 8, 5)
+    'quinta coluna (Values):
+    ActiveSheet.Cells(a, j + 4) = "Values"
+    ActiveSheet.Cells(a + 1, j + 4) = ActiveWorkbook.Sheets("MAT").Cells(n + 3, 7)
+    ActiveSheet.Cells(a + 2, j + 4) = ActiveWorkbook.Sheets("MAT").Cells(n + 4, 7)
+    ActiveSheet.Cells(a + 3, j + 4) = ActiveWorkbook.Sheets("MAT").Cells(n + 5, 7)
+    ActiveSheet.Cells(a + 4, j + 4) = ActiveWorkbook.Sheets("MAT").Cells(n + 6, 7)
+    ActiveSheet.Cells(a + 5, j + 4) = ActiveWorkbook.Sheets("MAT").Cells(n + 7, 7)
+    ActiveSheet.Cells(a + 6, j + 4) = ActiveWorkbook.Sheets("MAT").Cells(n + 8, 7)
+    
+    a = a + 8
+    n = n - r + 1 'retira a linha extra do "Release" para continuar o programa
+    
+    Wend
+    
+    n = n + 1
+    ActiveWorkbook.Sheets("MAT").Cells(max, 1) = "" 'tira a modificação feita na planilha original
+    
+    
+End Sub
